@@ -51,7 +51,7 @@ def read_terms(t):
     terms = []
     op = 1
 
-    print('\nDigite os termos validos (-1 para parar)\n')
+    print('\nDigite os termos validos (-1 para parar)')
 
     while(op != -1):
         op = int(input())
