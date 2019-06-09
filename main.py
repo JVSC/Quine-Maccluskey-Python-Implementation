@@ -1,5 +1,21 @@
 from collections import Counter
 
+class MQ:
+    def __init__(self, payload):
+        self.binary = convert_terms(payload['num'], payload['nv'])
+        self.binary_groups = set_groups(self.binary)
+        self.expressions = []
+        self.new_found = []
+        self.final_groups = {}
+
+    def get_grupos(self):
+        return self.binary_groups
+
+    def merge(self):
+        merge_groups(self.binary_groups, self.expressions)
+        self.final_groups = final_term(essential(self.expressions), not_essential(self.expressions), self.expressions, self.new_found)
+    def convert(self):
+        return convert_to_boexp(remove_redundancy(self.final_groups['ver'], self.final_groups, self.new_found))
 
 def get_all_keys(string):
     counter = 0
@@ -12,9 +28,8 @@ def compare_terms(member_of_first, member_of_second):
     keys_of_first = get_all_keys(member_of_first)
     keys_of_second = get_all_keys(member_of_second)
     missing = [i for i in range(len(member_of_second['exp']))
-               if member_of_second['exp'][i] != member_of_first['exp'][i]]
+            if member_of_second['exp'][i] != member_of_first['exp'][i]]
     return missing
-
 
 def replace(member_of_second, member_of_first, replace_at):
     new_term = {'exp': '', 'unique': 0, 'minterms': [], 'pass': False}
@@ -43,29 +58,13 @@ def convert_terms(terms, n_variables):
         your_list = '{:b}'.format(term)
         binary_string.append({'exp': your_list.zfill(
             n_variables), 'unique': 0, 'minterms': [term], 'pass': False})
+
     return binary_string
-
-
-def read_terms(t):
-    nv = input('Numero de variaveis: ')
-    terms = []
-    op = 1
-
-    print('\nDigite os termos validos (-1 para parar)')
-
-    while(op != -1):
-        op = int(input())
-        if (op != -1):
-            terms.append(op)
-    t = terms
-    binary = convert_terms(terms, int(nv))
-    return binary
-
 
 def set_groups(binary_string):
     print("\n==========================")
     print("Agrupando elementos...")
-    stand = {'0': [], '1': [], '2': [], '3': [], '4': []}
+    stand = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': []}
     group = list()
 
     for string in binary_string:
@@ -123,32 +122,54 @@ def merge_groups(binary_matrix, expressions):
 
 def convert_to_boexp(binary_expression):
     counter = 0
+    fstring = ''
     for string in binary_expression:
         for x in enumerate(string):
             if(x[1] != '-'):
                 if(x[0] == 0):
                     if(x[1] == '0'):
-                        print("A'", end='')
+                        fstring = fstring + "A'"
                     else:
-                        print('A', end='')
+                        fstring = fstring + "A"
                 elif(x[0] == 1):
                     if(x[1] == '0'):
-                        print("B'", end='')
+                        fstring = fstring + "B'"
                     else:
-                        print('B', end='')
+                        fstring = fstring + "B"
                 elif(x[0] == 2):
                     if(x[1] == '0'):
-                        print("C'", end='')
+                        fstring = fstring + "C'"
                     else:
-                        print('C', end='')
+                        fstring = fstring + "C"
                 elif(x[0] == 3):
                     if(x[1] == '0'):
-                        print("D'", end='')
+                        fstring = fstring + "D'"
                     else:
-                        print('D', end='')
-        print(" + ", end='')
+                        fstring = fstring + "D"
+                elif(x[0] == 4):
+                    if(x[1] == '0'):
+                        fstring = fstring + "E'"
+                    else:
+                        fstring = fstring + "E"
+                elif(x[0] == 5):
+                    if(x[1] == '0'):
+                        fstring = fstring + "F'"
+                    else:
+                        fstring = fstring + "F"
+                elif(x[0] == 6):
+                    if(x[1] == '0'):
+                        fstring = fstring + "G'"
+                    else:
+                        fstring = fstring + "G"
+                elif(x[0] == 7):
+                    if(x[1] == '0'):
+                        fstring = fstring + "H'"
+                    else:
+                        fstring = fstring + "H"
         counter += 1
-    print('')
+        if(counter < len(binary_expression)):
+            fstring = fstring + ' + '
+    return fstring
 
 
 def essential(expressions):
@@ -251,16 +272,3 @@ def remove_redundancy(needles, haysack, newly):
     for val in newly:
         temp.append(val['expression'])
     return temp
-    
-expressions = []
-terms = []
-newly = []
-merge_groups(set_groups(read_terms(terms)), expressions)
-groups = final_term(essential(expressions),
-                    not_essential(expressions), expressions, newly)
-unique_groups(groups['ver'])
-
-print('===========================================')
-convert_to_boexp(remove_redundancy(groups['ver'], groups, newly)
-)
-print('===========================================')
