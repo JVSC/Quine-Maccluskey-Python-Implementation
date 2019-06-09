@@ -1,11 +1,16 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import main
 import os
 
-_port = int(os.environ.get('PORT', 5000))
-app = Flask(__name__)
+_port = int(os.environ.get('PORT', 3000))
+app = Flask(__name__, static_folder="www", static_url_path="", template_folder='www')
 CORS(app)
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
 @app.route('/solver', methods=['POST'])
 def solver():
     req_data = request.get_json()
@@ -13,7 +18,7 @@ def solver():
     mq = main.MQ(req_data)
     mq.merge()
     string = mq.convert()
-
     return jsonify({'exp': string})
 
-app.run(host='0.0.0.0', port=_port)
+
+app.run(host='localhost', port=_port)
