@@ -4,13 +4,12 @@ import main
 import os
 
 _port = int(os.environ.get('PORT', 3000))
-app = Flask(__name__, static_folder="static", static_url_path="", template_folder='static')
+app = Flask(__name__, static_url_path="", template_folder='static')
 CORS(app)
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
-
 @app.route('/solver', methods=['POST'])
 def solver():
     req_data = request.get_json()
