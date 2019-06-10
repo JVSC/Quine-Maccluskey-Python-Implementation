@@ -20,4 +20,5 @@ def solver():
     return jsonify({'exp': string})
 
 
-app.run(host='localhost', port=_port)
+if __name__ == "__main__":
+    app.run()
