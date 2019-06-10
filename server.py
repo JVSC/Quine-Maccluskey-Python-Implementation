@@ -19,6 +19,4 @@ def solver():
     string = mq.convert()
     return jsonify({'exp': string})
 
-
-if __name__ == "__main__":
-    app.run('localhost', _port)
+app.run('localhost', _port)
