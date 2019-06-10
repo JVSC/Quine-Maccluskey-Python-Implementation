@@ -21,4 +21,4 @@ def solver():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run('localhost', _port)
