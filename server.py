@@ -9,7 +9,7 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def index():
-    return '1'
+    return render_template('index.html')
 @app.route('/solver', methods=['POST'])
 def solver():
     req_data = request.get_json()
