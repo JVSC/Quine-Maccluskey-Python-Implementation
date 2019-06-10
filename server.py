@@ -4,7 +4,7 @@ import main
 import os
 
 _port = int(os.environ.get('PORT', 3000))
-app = Flask(__name__, static_folder="www", static_url_path="", template_folder='www')
+app = Flask(__name__, static_folder="static", static_url_path="", template_folder='static')
 CORS(app)
 
 @app.route('/', methods=['GET'])
