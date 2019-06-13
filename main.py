@@ -1,15 +1,15 @@
 from collections import Counter
-
 class MQ:
     def __init__(self, payload):
+        self.terms = payload['num']
         self.binary = convert_terms(payload['num'], payload['nv'])
         self.binary_groups = set_groups(self.binary)
         self.expressions = []
         self.new_found = []
         self.final_groups = {}
 
-    def get_grupos(self):
-        return self.binary_groups
+    def get_final_groups(self):
+        return self.expressions
 
     def merge(self):
         merge_groups(self.binary_groups, self.expressions)
@@ -62,8 +62,6 @@ def convert_terms(terms, n_variables):
     return binary_string
 
 def set_groups(binary_string):
-    print("\n==========================")
-    print("Agrupando elementos...")
     stand = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': []}
     group = list()
 
@@ -74,16 +72,6 @@ def set_groups(binary_string):
     for m in stand:
         if (stand[m] != []):
             group.append(stand[m])
-    print("--------------------------")
-    print("######### Grupos #########")
-    counter = 0
-    for members in group:
-        print(f"-> Grupo {counter+1}: ", end=' ')
-        for member in members:
-            print(f"{member['exp']} contem: {member['minterms']}", end=' ')
-        print('')
-        counter += 1
-    print("==========================")
 
     return group
 
@@ -113,8 +101,6 @@ def merge_groups(binary_matrix, expressions):
     if (check):
         merge_groups(set_groups(new_strings), expressions)
     else:
-        print("Acabamos!")
-        print("Retornando valores...")
         for x in new_strings:
             if not x in expressions:
                 expressions.append(x)
@@ -217,10 +203,7 @@ def final_term(unique, not_unique, expressions, newly):
                 completo.extend(term['minterms'])
                 newly.append({'minterm':term['minterms'], 'expression':term['exp']})
 
-    missing = list(set(not_unique) - set(completo))
-    if (missing):
-        print("AVISO: TERMO(S) EXCEDENTE(S) ENCONTRADO(S)")
-    for v in missing:
+    for v in list(set(not_unique) - set(completo)):
         for term in expressions:
             if v in term['minterms'] and not term['pass']:
                 term['pass'] = True
@@ -272,3 +255,4 @@ def remove_redundancy(needles, haysack, newly):
     for val in newly:
         temp.append(val['expression'])
     return temp
+
