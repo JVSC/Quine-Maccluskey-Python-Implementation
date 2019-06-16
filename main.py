@@ -45,7 +45,7 @@ class MQ:
         else:
             for exp in fin:
                 send.append(convert_to_boexp(exp))
-        console.log(send)
+        print(send)
         return send
 
 # IMPLEMENTATION **********************************************************************************************
