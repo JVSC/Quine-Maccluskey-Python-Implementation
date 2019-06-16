@@ -1,21 +1,54 @@
 from collections import Counter
+
+
 class MQ:
     def __init__(self, payload):
-        self.terms = payload['num']
+        self.terms = set(payload['num'])
+        self.nv = payload['nv']
         self.binary = convert_terms(payload['num'], payload['nv'])
         self.binary_groups = set_groups(self.binary)
         self.expressions = []
         self.new_found = []
         self.final_groups = {}
+        self.res = []
 
-    def get_final_groups(self):
-        return self.expressions
+    def set_groups(self):
+        nao_repetidos = {}
+        final = []
+        v = []
+        check = set()
+        for e in self.final_groups['final']:
+            nao_repetidos[e['expression']] = {
+                'exp': e['expression'], 'minterms': set(e['minterm'])}
+
+        for e in nao_repetidos:
+            final.append(nao_repetidos[e])
+
+        printAllSubsetsRec(final, len(final), v, self.terms, check, self.res)
 
     def merge(self):
         merge_groups(self.binary_groups, self.expressions)
-        self.final_groups = final_term(essential(self.expressions), not_essential(self.expressions), self.expressions, self.new_found)
+        self.final_groups = final_term(essential(self.expressions), not_essential(
+            self.expressions), self.expressions, self.new_found)
+
     def convert(self):
-        return convert_to_boexp(remove_redundancy(self.final_groups['ver'], self.final_groups, self.new_found))
+        self.set_groups()
+        fin = []
+        send = []
+        for e in self.res:
+            ex = []
+            for t in e:
+                ex.append(t['exp'])
+            fin.append(ex)
+        if(self.nv > 4): 
+            send.append(convert_to_boexp(remove_redundancy(self.final_groups['ver'], self.final_groups, self.new_found)))
+        else:
+            for exp in fin:
+                send.append(convert_to_boexp(exp))
+        return send
+
+# IMPLEMENTATION **********************************************************************************************
+
 
 def get_all_keys(string):
     counter = 0
@@ -28,8 +61,9 @@ def compare_terms(member_of_first, member_of_second):
     keys_of_first = get_all_keys(member_of_first)
     keys_of_second = get_all_keys(member_of_second)
     missing = [i for i in range(len(member_of_second['exp']))
-            if member_of_second['exp'][i] != member_of_first['exp'][i]]
+               if member_of_second['exp'][i] != member_of_first['exp'][i]]
     return missing
+
 
 def replace(member_of_second, member_of_first, replace_at):
     new_term = {'exp': '', 'unique': 0, 'minterms': [], 'pass': False}
@@ -61,8 +95,10 @@ def convert_terms(terms, n_variables):
 
     return binary_string
 
+
 def set_groups(binary_string):
-    stand = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': []}
+    stand = {'0': [], '1': [], '2': [], '3': [],
+             '4': [], '5': [], '6': [], '7': [], '8': []}
     group = list()
 
     for string in binary_string:
@@ -201,7 +237,8 @@ def final_term(unique, not_unique, expressions, newly):
                 retorno.append(
                     {'expression': term['exp'], 'minterm': term['minterms']})
                 completo.extend(term['minterms'])
-                newly.append({'minterm':term['minterms'], 'expression':term['exp']})
+                newly.append(
+                    {'minterm': term['minterms'], 'expression': term['exp']})
 
     for v in list(set(not_unique) - set(completo)):
         for term in expressions:
@@ -214,8 +251,9 @@ def final_term(unique, not_unique, expressions, newly):
                 break
     return {'final': retorno, 'ver': checker}
 
+
 def unique_groups(groups):
-    
+
     for minterms in groups:
         check = len(minterms)
         for value in minterms:
@@ -228,6 +266,7 @@ def unique_groups(groups):
             groups.remove(minterms)
             unique_groups(groups)
             return
+
 
 def double_redundancy(haysack):
     for needle in haysack:
@@ -243,6 +282,7 @@ def double_redundancy(haysack):
             double_redundancy(haysack)
             return
 
+
 def remove_redundancy(needles, haysack, newly):
     temp = []
     if (needles):
@@ -256,3 +296,26 @@ def remove_redundancy(needles, haysack, newly):
         temp.append(val['expression'])
     return temp
 
+
+def printAllSubsetsRec(arr, n, v, sum, check, res):
+    ele = arr[n-1]
+
+    if sum == check:
+        if(len(res)):
+            p_final = len(res[0]) # tamanho do primeiro conjunto final 
+            atual = len(v) # tamanho do conjunto atual
+            if( p_final < atual ): pass
+            elif( p_final > atual): res = list().append(v)
+            else: res.append(v)
+        else: res.append(v)
+        return
+    if check.issuperset(ele['minterms']):
+        return
+    if not n:
+        return
+
+    printAllSubsetsRec(arr, n - 1, v, sum, check, res)
+    v1 = [] + v
+    v1.append(ele)
+    check2 = check.union(ele['minterms'])
+    printAllSubsetsRec(arr, n-1, v1, sum, check2, res)
