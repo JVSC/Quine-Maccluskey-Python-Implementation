@@ -35,7 +35,6 @@ class MQ:
         self.set_groups()
         fin = []
         send = []
-        print(self.res)
         for e in self.res:
             ex = []
             for t in e:
@@ -46,7 +45,6 @@ class MQ:
         else:
             for exp in fin:
                 send.append(convert_to_boexp(exp))
-        print(send)
         return send
 
 # IMPLEMENTATION **********************************************************************************************

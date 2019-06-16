@@ -13,7 +13,6 @@ def index():
 @app.route('/solver', methods=['POST'])
 def solver():
     req_data = request.get_json()
-    print(req_data)
     mq = main.MQ(req_data)
     mq.merge()
     string = mq.convert()
