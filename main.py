@@ -35,15 +35,18 @@ class MQ:
         self.set_groups()
         fin = []
         send = []
+        print(self.res)
         for e in self.res:
             ex = []
             for t in e:
                 ex.append(t['exp'])
             fin.append(ex)
         if(self.nv > 4): 
+            print(f'bigger than {n}')
             send.append(convert_to_boexp(remove_redundancy(self.final_groups['ver'], self.final_groups, self.new_found)))
         else:
             for exp in fin:
+                print(exp)
                 send.append(convert_to_boexp(exp))
         print(send)
         return send
