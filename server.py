@@ -34,7 +34,8 @@ def classify():
     req_data = request.get_json()
     return jsonify(fkNews.Classifier(req_data['text']).classify())
 
+nltk.download('punkt')
 
 if __name__ == "__main__":
-    nltk.download('punkt')
+    
     app.run('localhost', _port)
