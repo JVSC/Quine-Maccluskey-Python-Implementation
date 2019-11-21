@@ -13,7 +13,7 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return send_from_directory("public", "ionic.html")
 
 
 @app.route('/solver', methods=['POST'])
