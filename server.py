@@ -36,4 +36,5 @@ def classify():
 
 
 if __name__ == "__main__":
+    os.system("python3 -m textblob.download_corpora")
     app.run('localhost', _port)
