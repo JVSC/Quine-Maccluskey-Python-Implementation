@@ -6,8 +6,7 @@ import fkNews
 import nltk
 
 _port = int(os.environ.get('PORT', 3000))
-app = Flask(__name__, static_url_path="",
-            template_folder='static', static_folder="./public")
+app = Flask(__name__, static_url_path="", static_folder="./public")
 CORS(app)
 
 
