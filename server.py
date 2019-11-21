@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
+import os
 import main
 import fkNews
 import nltk
@@ -34,8 +35,6 @@ def classify():
     req_data = request.get_json()
     return jsonify(fkNews.Classifier(req_data['text']).classify())
 
-nltk.download('punkt')
-
 if __name__ == "__main__":
-    
+    nltk.download("punkt", "/home/jvsc/Projects/Quine-Maccluskey-Python-Implementation/nltk_data/")
     app.run('localhost', _port)
