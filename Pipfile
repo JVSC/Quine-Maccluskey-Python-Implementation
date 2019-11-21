@@ -11,6 +11,7 @@ gunicorn = "==19.9.0"
 Flask = "==1.0.3"
 textblob = "*"
 pandas = "*"
+nltk = "*"
 
 [requires]
 python_version = "3.6"

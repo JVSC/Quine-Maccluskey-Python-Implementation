@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 import main
 import fkNews
-import os
+import nltk
 
 _port = int(os.environ.get('PORT', 3000))
 app = Flask(__name__, static_url_path="",
@@ -36,5 +36,5 @@ def classify():
 
 
 if __name__ == "__main__":
-    os.system("python3 -m textblob.download_corpora")
+    nltk.download('punkt')
     app.run('localhost', _port)
