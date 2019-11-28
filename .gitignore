@@ -1,1 +1,3 @@
 fakenews/
+.vscode/*
+samples/test.csv
