@@ -2,7 +2,7 @@ from textblob import TextBlob
 from textblob.classifiers import NaiveBayesClassifier 
 import pandas as pd
 
-news = pd.read_csv('./samples/news.csv', sep=',', header = None)
+news = pd.read_csv('./samples/news.csv', sep=';', header = None)
 clf = NaiveBayesClassifier(news.values, format="csv")
 
 class Classifier:
@@ -18,4 +18,4 @@ class Classifier:
 
 #n = pd.read_csv('./samples/test.csv', sep=',', header = None)
 #for i in n.values[0:100]:
-#    print(Classifier(i[3]).classify())    
+#    print(Classifier(i[3]).classify())   
