@@ -2,18 +2,8 @@ from textblob import TextBlob
 from textblob.classifiers import NaiveBayesClassifier 
 import pandas as pd
 
-def panda_parser_train():
-    # id,title,author,text,label
-    train = []
-    n = pd.read_csv('./samples/train.csv', sep=',', header = None)
-    for i in n.values[0:100]:
-        tple = (i[3], i[4])
-        train.append(tple)
-
-    return train 
-
-news = panda_parser_train()
-clf = NaiveBayesClassifier(news, format="csv")
+news = pd.read_csv('./samples/news.csv', sep=',', header = None)
+clf = NaiveBayesClassifier(news.values, format="csv")
 
 class Classifier:
     def __init__(self, headline):
@@ -29,4 +19,3 @@ class Classifier:
 #n = pd.read_csv('./samples/test.csv', sep=',', header = None)
 #for i in n.values[0:100]:
 #    print(Classifier(i[3]).classify())    
-        
