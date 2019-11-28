@@ -11,8 +11,8 @@ class Classifier:
     def classify(self):
         res = clf.prob_classify(self.headline)
         return {
-            'fake_news': res.prob(0),
-            'verdadeiro': res.prob(1)
+            'fake_news': res.prob('fake_news'),
+            'verdadeiro': res.prob('verdadeiro')
         }
 
 
